@@ -5,6 +5,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 ## Puzzles
 
 - [Day 1: Historian Hysteria](./day-01)
+- [Day 2: Red-Nosed Reports](./day-02)
 
 ## License
 
