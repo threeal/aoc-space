@@ -2,6 +2,10 @@
 
 A dedicated workspace and archive for my [Advent of Code](https://adventofcode.com/) submissions.
 
+## Puzzles
+
+- [Day 1: Historian Hysteria](./day-01)
+
 ## License
 
 This project is licensed under the terms of the [MIT License](./LICENSE).
