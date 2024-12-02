@@ -11,3 +11,6 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4.2.2
+
+      - name: Build Project
+        run: make --no-print-directory
