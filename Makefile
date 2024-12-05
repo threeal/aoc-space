@@ -1,4 +1,7 @@
-.PHONY: test
+.PHONY: format test
+
+format:
+	@clang-format -i **/*.cpp
 
 test:
 	@make -C day-01

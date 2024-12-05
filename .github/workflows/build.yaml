@@ -12,5 +12,8 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v4.2.2
 
+      - name: Check Formatting
+        run: make format && git diff --exit-code HEAD
+
       - name: Build Project
         run: make --no-print-directory
