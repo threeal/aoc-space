@@ -8,6 +8,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 2: Red-Nosed Reports](./day-02)
 - [Day 3: Mull It Over](./day-03)
 - [Day 4: Ceres Search](./day-04)
+- [Day 5: Print Queue](./day-05)
 
 ## License
 
