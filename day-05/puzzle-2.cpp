@@ -23,16 +23,22 @@ int main() {
       nums.push_back((line[i] - '0') * 10 + line[i + 1] - '0');
     }
 
+    int fixes{0};
     for (std::size_t i{1}; i < nums.size(); ++i) {
       for (std::size_t j{0}; j < i; ++j) {
-        if (forbiddens[nums[i]].contains(nums[j])) goto skip;
+        if (forbiddens[nums[i]].contains(nums[j])) {
+          ++fixes;
+          const int temp{nums[i]};
+          for (std::size_t k{i}; k > j; --k) {
+            nums[k] = nums[k - 1];
+          }
+          nums[j] = temp;
+          i = 0;
+        }
       }
     }
 
-    total += nums[nums.size() / 2];
-    continue;
-
-  skip:;
+    if (fixes > 0) total += nums[nums.size() / 2];
   }
 
   std::cout << total << "\n";
