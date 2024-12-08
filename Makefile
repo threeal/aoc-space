@@ -8,6 +8,7 @@ test:
 	@make -C day-05
 	@make -C day-06
 	@make -C day-07
+	@make -C day-08
 
 format:
 	@clang-format -i **/*.cpp
