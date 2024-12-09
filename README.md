@@ -12,6 +12,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 6: Guard Gallivant](./day-06)
 - [Day 7: Bridge Repair](./day-07)
 - [Day 8: Resonant Collinearity](./day-08)
+- [Day 9: Disk Fragmenter](./day-09)
 
 ## License
 
