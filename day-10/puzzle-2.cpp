@@ -1,5 +1,5 @@
 #include <iostream>
-#include <list>
+#include <queue>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -16,42 +16,35 @@ int main() {
     for (std::size_t x{0}; x < lines[y].size(); ++x) {
       if (lines[y][x] != '0') continue;
 
-      std::vector<std::list<std::tuple<std::size_t, std::size_t>>> level_queues(10);
+      std::queue<std::tuple<std::size_t, std::size_t>> queue{};
+      queue.push({y, x});
 
-      level_queues[0].push_back({y, x});
-      lines[y][x] += 10;
+      char level{'0'};
+      while (level < '9' && !queue.empty()) {
+        for (std::size_t i{queue.size()}; i > 0; --i) {
+          const auto [y, x] = queue.front();
+          queue.pop();
 
-      for (std::size_t i{0}; i < 9; ++i) {
-        for (const auto& [y, x] : level_queues[i]) {
-          if (x < lines[y].size() - 1 && lines[y][x + 1] == '1' + i) {
-            level_queues[i + 1].push_back({y, x + 1});
-            lines[y][x + 1] += 10;
+          if (x < lines[y].size() - 1 && lines[y][x + 1] == level + 1) {
+            queue.push({y, x + 1});
           }
 
-          if (y < lines.size() - 1 && lines[y + 1][x] == '1' + i) {
-            level_queues[i + 1].push_back({y + 1, x});
-            lines[y + 1][x] += 10;
+          if (y < lines.size() - 1 && lines[y + 1][x] == level + 1) {
+            queue.push({y + 1, x});
           }
 
-          if (x > 0 && lines[y][x - 1] == '1' + i) {
-            level_queues[i + 1].push_back({y, x - 1});
-            lines[y][x - 1] += 10;
+          if (x > 0 && lines[y][x - 1] == level + 1) {
+            queue.push({y, x - 1});
           }
 
-          if (y > 0 && lines[y - 1][x] == '1' + i) {
-            level_queues[i + 1].push_back({y - 1, x});
-            lines[y - 1][x] += 10;
+          if (y > 0 && lines[y - 1][x] == level + 1) {
+            queue.push({y - 1, x});
           }
         }
+        ++level;
       }
 
-      total_score += level_queues[9].size();
-
-      for (const auto& queues : level_queues) {
-        for (const auto& [y, x] : queues) {
-          lines[y][x] -= 10;
-        }
-      }
+      if (level == '9') total_score += queue.size();
     }
   }
 
