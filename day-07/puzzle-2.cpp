@@ -39,6 +39,13 @@ int main() {
       for (std::size_t n{nums.size()}; n > 0; --n) {
         if (nums.front() + num <= test) nums.push(nums.front() + num);
         if (nums.front() * num <= test) nums.push(nums.front() * num);
+
+        long long exp{10};
+        while (exp <= num) exp *= 10;
+        if (nums.front() * exp + num <= test) {
+          nums.push(nums.front() * exp + num);
+        }
+
         nums.pop();
       }
     }
