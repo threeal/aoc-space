@@ -26,22 +26,49 @@ int main() {
   int count{0};
   for (const auto& [freq, antennas] : grouped_antennas) {
     for (std::size_t i{0}; i < antennas.size(); ++i) {
+      if (lines[antennas[i].y][antennas[i].x] == '.') {
+        lines[antennas[i].y][antennas[i].x] = '#';
+        ++count;
+      }
+
       for (std::size_t j{i + 1}; j < antennas.size(); ++j) {
-        if (2 * antennas[i].x >= antennas[j].x && 2 * antennas[i].y >= antennas[j].y) {
-          const std::size_t x{2 * antennas[i].x - antennas[j].x};
-          const std::size_t y{2 * antennas[i].y - antennas[j].y};
-          if (y < lines.size() && x < lines[y].size() && lines[y][x] == '.') {
-            lines[y][x] = '#';
-            ++count;
+        if (lines[antennas[j].y][antennas[j].x] == '.') {
+          lines[antennas[j].y][antennas[j].x] = '#';
+          ++count;
+        }
+
+        std::size_t ii{2}, jj{1};
+        while (ii * antennas[i].x >= jj * antennas[j].x &&
+               ii * antennas[i].y >= jj * antennas[j].y) {
+          const std::size_t x{ii * antennas[i].x - jj * antennas[j].x};
+          const std::size_t y{ii * antennas[i].y - jj * antennas[j].y};
+          if (y < lines.size() && x < lines[y].size()) {
+            if (lines[y][x] == '.') {
+              lines[y][x] = '#';
+              ++count;
+            }
+            ++ii;
+            ++jj;
+          } else {
+            break;
           }
         }
 
-        if (2 * antennas[j].x >= antennas[i].x && 2 * antennas[j].y >= antennas[i].y) {
-          const std::size_t x{2 * antennas[j].x - antennas[i].x};
-          const std::size_t y{2 * antennas[j].y - antennas[i].y};
-          if (y < lines.size() && x < lines[y].size() && lines[y][x] == '.') {
-            lines[y][x] = '#';
-            ++count;
+        jj = 2;
+        ii = 1;
+        while (jj * antennas[j].x >= ii * antennas[i].x &&
+               jj * antennas[j].y >= ii * antennas[i].y) {
+          const std::size_t x{jj * antennas[j].x - ii * antennas[i].x};
+          const std::size_t y{jj * antennas[j].y - ii * antennas[i].y};
+          if (y < lines.size() && x < lines[y].size()) {
+            if (lines[y][x] == '.') {
+              lines[y][x] = '#';
+              ++count;
+            }
+            ++ii;
+            ++jj;
+          } else {
+            break;
           }
         }
       }
