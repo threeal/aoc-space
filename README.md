@@ -14,6 +14,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 8: Resonant Collinearity](./day-08)
 - [Day 9: Disk Fragmenter](./day-09)
 - [Day 10: Hoof It](./day-10)
+- [Day 11: Plutonian Pebbles](./day-11)
 
 ## License
 
