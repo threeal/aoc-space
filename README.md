@@ -15,6 +15,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 9: Disk Fragmenter](./day-09)
 - [Day 10: Hoof It](./day-10)
 - [Day 11: Plutonian Pebbles](./day-11)
+- [Day 12: Garden Groups](./day-12)
 
 ## License
 
