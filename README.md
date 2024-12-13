@@ -16,6 +16,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 10: Hoof It](./day-10)
 - [Day 11: Plutonian Pebbles](./day-11)
 - [Day 12: Garden Groups](./day-12)
+- [Day 13: Claw Contraption](./day-13)
 
 ## License
 
