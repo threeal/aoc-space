@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 enum {
@@ -16,11 +17,15 @@ struct Step {
   std::size_t y;
   std::size_t x;
   char dir;
+  std::unordered_set<std::size_t> prevs;
 };
 
 struct CompareSteps {
   bool operator()(const Step& a, const Step& b) {
-    return a.point > b.point;
+    if (a.point != b.point) return a.point > b.point;
+    if (a.y != b.y) return a.y < b.y;
+    if (a.x != b.x) return a.x < b.x;
+    return a.dir < b.dir;
   }
 };
 
@@ -58,15 +63,28 @@ int main() {
   }
 
   std::priority_queue<Step, std::vector<Step>, CompareSteps> steps{};
-  steps.push({0, sy, sx, F_RIGHT});
+  steps.push({0, sy, sx, F_RIGHT, {}});
 
   while (!steps.empty()) {
-    const auto step = steps.top();
+    auto step = steps.top();
+    steps.pop();
+
+    while (
+        !steps.empty() &&
+        steps.top().point == step.point &&
+        steps.top().x == step.x &&
+        steps.top().y == step.y &&
+        steps.top().dir == step.dir) {
+      for (const auto prev : steps.top().prevs) {
+        step.prevs.insert(prev);
+      }
+      steps.pop();
+    }
+
     if (step.y == ey && step.x == ex) {
-      std::cout << step.point << "\n";
+      std::cout << step.prevs.size() + 1 << "\n";
       return 0;
     }
-    steps.pop();
 
     switch (step.dir) {
       case F_RIGHT:
@@ -74,15 +92,17 @@ int main() {
         lines[step.y][step.x] |= F_RIGHT;
 
         if ((lines[step.y][step.x + 1] & (F_OBSTACLE | F_RIGHT)) == 0) {
-          steps.push({step.point + 1, step.y, step.x + 1, F_RIGHT});
+          auto prevs = step.prevs;
+          prevs.insert(step.y * lines[step.y].size() + step.x);
+          steps.push({step.point + 1, step.y, step.x + 1, F_RIGHT, prevs});
         }
 
         if ((lines[step.y][step.x] & F_DOWN) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_DOWN});
+          steps.push({step.point + 1000, step.y, step.x, F_DOWN, step.prevs});
         }
 
         if ((lines[step.y][step.x] & F_UP) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_UP});
+          steps.push({step.point + 1000, step.y, step.x, F_UP, step.prevs});
         }
         break;
 
@@ -91,15 +111,17 @@ int main() {
         lines[step.y][step.x] |= F_DOWN;
 
         if ((lines[step.y + 1][step.x] & (F_OBSTACLE | F_DOWN)) == 0) {
-          steps.push({step.point + 1, step.y + 1, step.x, F_DOWN});
+          auto prevs = step.prevs;
+          prevs.insert(step.y * lines[step.y].size() + step.x);
+          steps.push({step.point + 1, step.y + 1, step.x, F_DOWN, prevs});
         }
 
         if ((lines[step.y][step.x] & F_LEFT) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_LEFT});
+          steps.push({step.point + 1000, step.y, step.x, F_LEFT, step.prevs});
         }
 
         if ((lines[step.y][step.x] & F_RIGHT) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_RIGHT});
+          steps.push({step.point + 1000, step.y, step.x, F_RIGHT, step.prevs});
         }
         break;
 
@@ -108,15 +130,17 @@ int main() {
         lines[step.y][step.x] |= F_LEFT;
 
         if ((lines[step.y][step.x - 1] & (F_OBSTACLE | F_LEFT)) == 0) {
-          steps.push({step.point + 1, step.y, step.x - 1, F_LEFT});
+          auto prevs = step.prevs;
+          prevs.insert(step.y * lines[step.y].size() + step.x);
+          steps.push({step.point + 1, step.y, step.x - 1, F_LEFT, prevs});
         }
 
         if ((lines[step.y][step.x] & F_UP) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_UP});
+          steps.push({step.point + 1000, step.y, step.x, F_UP, step.prevs});
         }
 
         if ((lines[step.y][step.x] & F_DOWN) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_DOWN});
+          steps.push({step.point + 1000, step.y, step.x, F_DOWN, step.prevs});
         }
         break;
 
@@ -125,15 +149,17 @@ int main() {
         lines[step.y][step.x] |= F_UP;
 
         if ((lines[step.y - 1][step.x] & (F_OBSTACLE | F_UP)) == 0) {
-          steps.push({step.point + 1, step.y - 1, step.x, F_UP});
+          auto prevs = step.prevs;
+          prevs.insert(step.y * lines[step.y].size() + step.x);
+          steps.push({step.point + 1, step.y - 1, step.x, F_UP, prevs});
         }
 
         if ((lines[step.y][step.x] & F_RIGHT) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_RIGHT});
+          steps.push({step.point + 1000, step.y, step.x, F_RIGHT, step.prevs});
         }
 
         if ((lines[step.y][step.x] & F_LEFT) == 0) {
-          steps.push({step.point + 1000, step.y, step.x, F_LEFT});
+          steps.push({step.point + 1000, step.y, step.x, F_LEFT, step.prevs});
         }
         break;
     }
