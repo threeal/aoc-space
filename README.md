@@ -20,6 +20,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 14: Restroom Redoubt](./day-14)
 - [Day 15: Warehouse Woes](./day-15)
 - [Day 16: Reindeer Maze](./day-16)
+- [Day 17: Chronospatial Computer](./day-17)
 
 ## License
 
