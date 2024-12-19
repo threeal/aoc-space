@@ -21,6 +21,8 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 15: Warehouse Woes](./day-15)
 - [Day 16: Reindeer Maze](./day-16)
 - [Day 17: Chronospatial Computer](./day-17)
+- [Day 18: RAM Run](./day-18)
+- [Day 19: Linen Layout](./day-19)
 
 ## License
 
