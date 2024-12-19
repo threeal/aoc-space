@@ -1,6 +1,8 @@
+#include <functional>
 #include <iostream>
 #include <list>
 #include <string>
+#include <unordered_map>
 
 int main() {
   std::string line{};
@@ -15,18 +17,35 @@ int main() {
   }
   patterns.push_back(line.substr(pos));
 
-  std::cout << "patterns:\n";
-  bool first = true;
-  for (const auto& pattern : patterns) {
-    std::cout << "- " << pattern << "\n";
-  }
-
   if (!std::getline(std::cin, line)) return 1;
 
-  std::cout << "designs:\n";
+  std::unordered_map<std::string, bool> cache{};
+
+  const std::function<bool(const std::string&)> is_valid =
+      [&](const std::string& design) -> bool {
+    const auto it = cache.find(design);
+    if (it != cache.end()) return it->second;
+
+    for (const auto& pattern : patterns) {
+      if (design.size() < pattern.size()) continue;
+      if (design.compare(0, pattern.size(), pattern) == 0) {
+        if (design.size() > pattern.size() &&
+            !is_valid(design.substr(pattern.size()))) continue;
+
+        cache.emplace(design, true);
+        return true;
+      }
+    }
+
+    cache.emplace(design, false);
+    return false;
+  };
+
+  int count{0};
   while (std::getline(std::cin, line)) {
-    std::cout << "- " << line << "\n";
+    if (is_valid(line)) ++count;
   }
 
-  return 1;
+  std::cout << count << "\n";
+  return 0;
 }
