@@ -19,33 +19,34 @@ int main() {
 
   if (!std::getline(std::cin, line)) return 1;
 
-  std::unordered_map<std::string, bool> cache{};
+  std::unordered_map<std::string, std::size_t> cache{};
 
-  const std::function<bool(const std::string&)> is_valid =
-      [&](const std::string& design) -> bool {
+  const std::function<std::size_t(const std::string&)> count_permutation =
+      [&](const std::string& design) -> std::size_t {
     const auto it = cache.find(design);
     if (it != cache.end()) return it->second;
 
+    std::size_t count{0};
     for (const auto& pattern : patterns) {
       if (design.size() < pattern.size()) continue;
       if (design.compare(0, pattern.size(), pattern) == 0) {
-        if (design.size() > pattern.size() &&
-            !is_valid(design.substr(pattern.size()))) continue;
-
-        cache.emplace(design, true);
-        return true;
+        if (design.size() > pattern.size()) {
+          count += count_permutation(design.substr(pattern.size()));
+        } else {
+          ++count;
+        }
       }
     }
 
-    cache.emplace(design, false);
-    return false;
+    cache.emplace(design, count);
+    return count;
   };
 
-  int count{0};
+  std::size_t count{0};
   while (std::getline(std::cin, line)) {
-    if (is_valid(line)) ++count;
+    count += count_permutation(line);
   }
 
   std::cout << count << "\n";
-  return 1;
+  return 0;
 }
