@@ -24,6 +24,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 18: RAM Run](./day-18)
 - [Day 19: Linen Layout](./day-19)
 - [Day 20: Race Condition](./day-20)
+- [Day 21: Keypad Conundrum](./day-21)
 
 ## License
 
