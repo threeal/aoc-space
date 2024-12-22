@@ -22,6 +22,7 @@ test:
 	@make -C day-19
 	@make -C day-20
 	@make -C day-21
+	@make -C day-22
 
 format:
 	@clang-format -i **/*.cpp
