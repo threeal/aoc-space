@@ -26,6 +26,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 20: Race Condition](./day-20)
 - [Day 21: Keypad Conundrum](./day-21)
 - [Day 22: Monkey Market](./day-22)
+- [Day 23: LAN Party](./day-23)
 
 ## License
 
