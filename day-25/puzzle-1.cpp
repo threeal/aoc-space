@@ -1,8 +1,12 @@
 #include <iostream>
+#include <list>
 #include <string>
 #include <vector>
 
 int main() {
+  int count{0};
+
+  std::list<std::vector<int>> locks{}, keys{};
   std::string line{};
   while (std::getline(std::cin, line)) {
     if (line == "#####") {
@@ -12,9 +16,17 @@ int main() {
           if (line[i] == '#') ++lock[i];
         }
       }
-      std::cout << "lock:";
-      for (const auto val : lock) std::cout << " " << val;
-      std::cout << "\n";
+
+      for (const auto& key : keys) {
+        if (lock[0] + key[0] > 5) continue;
+        if (lock[1] + key[1] > 5) continue;
+        if (lock[2] + key[2] > 5) continue;
+        if (lock[3] + key[3] > 5) continue;
+        if (lock[4] + key[4] > 5) continue;
+        ++count;
+      }
+
+      locks.push_back(lock);
     } else if (line == ".....") {
       std::vector<int> key(5, -1);
       while (std::getline(std::cin, line) && !line.empty()) {
@@ -22,12 +34,22 @@ int main() {
           if (line[i] == '#') ++key[i];
         }
       }
-      std::cout << "key:";
-      for (const auto val : key) std::cout << " " << val;
-      std::cout << "\n";
+
+      for (const auto& lock : locks) {
+        if (lock[0] + key[0] > 5) continue;
+        if (lock[1] + key[1] > 5) continue;
+        if (lock[2] + key[2] > 5) continue;
+        if (lock[3] + key[3] > 5) continue;
+        if (lock[4] + key[4] > 5) continue;
+        ++count;
+      }
+
+      keys.push_back(key);
     } else {
       return 1;
     }
   }
-  return 1;
+
+  std::cout << count << "\n";
+  return 0;
 }
