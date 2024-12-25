@@ -28,6 +28,7 @@ A dedicated workspace and archive for my [Advent of Code](https://adventofcode.c
 - [Day 22: Monkey Market](./day-22)
 - [Day 23: LAN Party](./day-23)
 - [Day 24: Crossed Wires](./day-24)
+- [Day 25: Code Chronicle](./day-25)
 
 ## License
 
