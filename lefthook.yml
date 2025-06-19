@@ -1,0 +1,9 @@
+pre-commit:
+  piped: true
+  jobs:
+    - name: fix formatting
+      run: clang-format -i {staged_files}
+      glob: "*.cpp"
+
+    - name: check diff
+      run: git diff --exit-code {staged_files}
