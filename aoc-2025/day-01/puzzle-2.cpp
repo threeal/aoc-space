@@ -11,10 +11,24 @@ int main() {
       move = move * 10 + line[i] - '0';
     }
 
-    if (line[0] == 'L') move *= -1;
+    count += move / 100;
+    move %= 100;
 
-    pos = (100 + (move + pos) % 100) % 100;
-    if (pos == 0) ++count;
+    if (line[0] == 'L') {
+      if (move > pos) {
+        if (pos != 0) ++count;
+        pos = (100 + pos - move) % 100;
+      } else {
+        if (pos == move) ++count;
+        pos -= move;
+      }
+    } else {
+      pos += move;
+      if (pos >= 100) {
+        pos -= 100;
+        ++count;
+      }
+    }
   }
 
   std::cout << count << "\n";
