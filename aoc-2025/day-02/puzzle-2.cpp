@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unordered_set>
 
 int main() {
   std::string line{};
@@ -8,44 +9,67 @@ int main() {
   long long sum{0};
   std::size_t i{0};
   while (i < line.size()) {
-    int length{0};
     long long firstId{0};
+    int firstDigits{0};
     while (line[i] != '-') {
-      ++length;
       firstId = firstId * 10 + line[i] - '0';
+      ++firstDigits;
       ++i;
-    }
-
-    if (length % 2 == 1) {
-      firstId = 1;
-      for (int i{0}; i < length; ++i) firstId *= 10;
-    }
-
-    long long exp{1};
-    for (length = (length + 1) / 2; length != 0; --length) exp *= 10;
-
-    long long num{firstId / exp};
-    while (num * exp + num < firstId) {
-      if (++num >= exp) exp *= 10;
     }
 
     ++i;
 
     long long lastId{0};
+    int lastDigits{0};
     while (i < line.size() && line[i] != ',') {
       lastId = lastId * 10 + line[i] - '0';
+      ++lastDigits;
       ++i;
     }
 
-    while (num * exp + num <= lastId) {
-      sum += num * exp + num;
-      if (++num >= exp) exp *= 10;
-    }
-
     ++i;
+
+    std::unordered_set<long long> visited{};
+    for (int repeat{2}; repeat <= lastDigits; ++repeat) {
+      int expDigits{firstDigits / repeat};
+      if (firstDigits % repeat != 0) ++expDigits;
+
+      long long exp{1};
+      for (int i{expDigits}; i != 0; --i) exp *= 10;
+
+      long long num{};
+      if (firstDigits % repeat == 0) {
+        num = firstId;
+        for (int i{1}; i < repeat; ++i) num /= exp;
+      } else {
+        num = exp / 10;
+      }
+
+      long long id{num};
+      for (int i{1}; i < repeat; ++i) id = id * exp + num;
+
+      while (id < firstId) {
+        if (++num >= exp) exp *= 10;
+
+        id = num;
+        for (int i{1}; i < repeat; ++i) id = id * exp + num;
+      }
+
+      while (id <= lastId) {
+        if (!visited.contains(id)) {
+          visited.insert(id);
+          sum += id;
+        }
+
+        if (++num >= exp) exp *= 10;
+
+        id = num;
+        for (int i{1}; i < repeat; ++i) id = id * exp + num;
+      }
+    }
   }
 
   std::cout << sum << "\n";
 
-  return 1;
+  return 0;
 }
