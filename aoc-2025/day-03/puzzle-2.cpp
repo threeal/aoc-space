@@ -1,23 +1,29 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 
 int main() {
-  int joltage{0};
+  long long totalJoltage{0};
 
   std::string line{};
   while (std::getline(std::cin, line)) {
-    char a{line[line.size() - 2]};
-    char b{line[line.size() - 1]};
-    for (std::size_t i{line.size() - 2}; i > 0; --i) {
-      if (line[i - 1] >= a) {
-        if (a > b) b = a;
-        a = line[i - 1];
+    std::string digits{line.substr(line.size() - 12)};
+
+    for (std::size_t i{line.size() - 12}; i > 0; --i) {
+      char digit{line[i - 1]};
+      for (std::size_t i{0}; i < digits.size(); ++i) {
+        if (digit < digits[i]) break;
+        std::swap(digit, digits[i]);
       }
     }
-    joltage += (a - '0') * 10 + b - '0';
+
+    long long joltage{0};
+    for (const char digit : digits) joltage = joltage * 10 + digit - '0';
+
+    totalJoltage += joltage;
   }
 
-  std::cout << joltage << "\n";
+  std::cout << totalJoltage << "\n";
 
-  return 1;
+  return 0;
 }
