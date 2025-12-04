@@ -6,3 +6,5 @@ test:
 	@echo "-----------------------"
 	@make -C day-01
 	@make -C day-02
+	@make -C day-03
+	@make -C day-04
