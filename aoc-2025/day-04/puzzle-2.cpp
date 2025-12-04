@@ -1,51 +1,116 @@
-#include <algorithm>
 #include <iostream>
+#include <queue>
 #include <string>
+#include <tuple>
 #include <vector>
 
 int main() {
   std::string line{};
   if (!std::getline(std::cin, line)) return 1;
 
-  std::vector<std::vector<int>> neighbors(
-      3, std::vector<int>(line.size() + 2, 0));
+  std::vector<std::vector<bool>> hasPapers(
+      3, std::vector<bool>(line.size() + 2, false));
 
-  for (std::size_t j{0}; j < line.size(); ++j) {
-    if (line[j] == '@') {
-      ++neighbors[0][j], ++neighbors[0][j + 2];
-      ++neighbors[1][j], ++neighbors[1][j + 1], ++neighbors[1][j + 2];
-    }
-  }
+  std::vector<std::vector<char>> neighbors(
+      3, std::vector<char>(line.size() + 2, 0));
 
-  int total{0};
-  std::string prevLine{line};
-  std::size_t i0{0}, i1{1}, i2{2};
-  while (std::getline(std::cin, line)) {
+  for (std::size_t i{1}; true; ++i) {
     for (std::size_t j{0}; j < line.size(); ++j) {
       if (line[j] == '@') {
-        ++neighbors[i0][j], ++neighbors[i0][j + 1], ++neighbors[i0][j + 2];
-        ++neighbors[i1][j], ++neighbors[i1][j + 2];
-        ++neighbors[i2][j], ++neighbors[i2][j + 1], ++neighbors[i2][j + 2];
+        hasPapers[i][j + 1] = true;
+
+        ++neighbors[i - 1][j];
+        ++neighbors[i - 1][j + 1];
+        ++neighbors[i - 1][j + 2];
+
+        ++neighbors[i][j];
+        ++neighbors[i][j + 2];
+
+        ++neighbors[i + 1][j];
+        ++neighbors[i + 1][j + 1];
+        ++neighbors[i + 1][j + 2];
       }
     }
 
-    for (std::size_t j{0}; j < prevLine.size(); ++j) {
-      if (prevLine[j] == '@' && neighbors[i0][j + 1] < 4) ++total;
-    }
+    if (!std::getline(std::cin, line)) break;
 
-    neighbors[i0].assign(neighbors[i0].size(), 0);
-    std::swap(line, prevLine);
-
-    i0 = (i0 + 1) % 3;
-    i1 = (i1 + 1) % 3;
-    i2 = (i2 + 1) % 3;
+    hasPapers.push_back(std::vector<bool>(line.size() + 2, false));
+    neighbors.push_back(std::vector<char>(line.size() + 2, 0));
   }
 
-  for (std::size_t j{0}; j < prevLine.size(); ++j) {
-    if (prevLine[j] == '@' && neighbors[i0][j + 1] < 4) ++total;
+  std::queue<std::tuple<std::size_t, std::size_t>> cells{};
+  for (std::size_t i{0}; i < hasPapers.size(); ++i) {
+    for (std::size_t j{0}; j < hasPapers[i].size(); ++j) {
+      if (hasPapers[i][j] && neighbors[i][j] < 4) {
+        hasPapers[i][j] = false;
+        cells.push({i, j});
+      }
+    }
+  }
+
+  std::size_t total{cells.size()};
+  while (!cells.empty()) {
+    const auto [i, j] = cells.front();
+    cells.pop();
+
+    --neighbors[i - 1][j - 1];
+    if (hasPapers[i - 1][j - 1] && neighbors[i - 1][j - 1] < 4) {
+      hasPapers[i - 1][j - 1] = false;
+      cells.push({i - 1, j - 1});
+      ++total;
+    }
+
+    --neighbors[i - 1][j];
+    if (hasPapers[i - 1][j] && neighbors[i - 1][j] < 4) {
+      hasPapers[i - 1][j] = false;
+      cells.push({i - 1, j});
+      ++total;
+    }
+
+    --neighbors[i - 1][j + 1];
+    if (hasPapers[i - 1][j + 1] && neighbors[i - 1][j + 1] < 4) {
+      hasPapers[i - 1][j + 1] = false;
+      cells.push({i - 1, j + 1});
+      ++total;
+    }
+
+    --neighbors[i][j - 1];
+    if (hasPapers[i][j - 1] && neighbors[i][j - 1] < 4) {
+      hasPapers[i][j - 1] = false;
+      cells.push({i, j - 1});
+      ++total;
+    }
+
+    --neighbors[i][j + 1];
+    if (hasPapers[i][j + 1] && neighbors[i][j + 1] < 4) {
+      hasPapers[i][j + 1] = false;
+      cells.push({i, j + 1});
+      ++total;
+    }
+
+    --neighbors[i + 1][j - 1];
+    if (hasPapers[i + 1][j - 1] && neighbors[i + 1][j - 1] < 4) {
+      hasPapers[i + 1][j - 1] = false;
+      cells.push({i + 1, j - 1});
+      ++total;
+    }
+
+    --neighbors[i + 1][j];
+    if (hasPapers[i + 1][j] && neighbors[i + 1][j] < 4) {
+      hasPapers[i + 1][j] = false;
+      cells.push({i + 1, j});
+      ++total;
+    }
+
+    --neighbors[i + 1][j + 1];
+    if (hasPapers[i + 1][j + 1] && neighbors[i + 1][j + 1] < 4) {
+      hasPapers[i + 1][j + 1] = false;
+      cells.push({i + 1, j + 1});
+      ++total;
+    }
   }
 
   std::cout << total << "\n";
 
-  return 1;
+  return 0;
 }
