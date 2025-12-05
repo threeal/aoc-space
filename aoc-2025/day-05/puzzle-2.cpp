@@ -33,5 +33,25 @@ int main() {
   while (std::getline(std::cin, line)) {
   }
 
-  return 1;
+  long long count{std::get<1>(ranges.back()) + 1 - std::get<0>(ranges.back())};
+  long long start{std::get<1>(ranges.back()) + 1};
+  ranges.pop_back();
+
+  while (true) {
+    while (!ranges.empty() && std::get<1>(ranges.back()) < start) {
+      ranges.pop_back();
+    }
+
+    if (ranges.empty()) break;
+
+    count += std::get<1>(ranges.back()) + 1 -
+             std::max(start, std::get<0>(ranges.back()));
+
+    start = std::get<1>(ranges.back()) + 1;
+    ranges.pop_back();
+  }
+
+  std::cout << count << "\n";
+
+  return 0;
 }
