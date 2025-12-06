@@ -5,3 +5,4 @@
 - [Day 3: Lobby](./day-03)
 - [Day 4: Printing Department](./day-04)
 - [Day 5: Cafeteria](./day-05)
+- [Day 6: Trash Compactor](./day-06)
