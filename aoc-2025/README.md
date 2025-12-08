@@ -7,3 +7,4 @@
 - [Day 5: Cafeteria](./day-05)
 - [Day 6: Trash Compactor](./day-06)
 - [Day 7: Laboratories](./day-07)
+- [Day 8: Playground](./day-08)
