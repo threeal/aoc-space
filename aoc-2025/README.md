@@ -8,3 +8,4 @@
 - [Day 6: Trash Compactor](./day-06)
 - [Day 7: Laboratories](./day-07)
 - [Day 8: Playground](./day-08)
+- [Day 9: Movie Theater](./day-09)
