@@ -1,41 +1,28 @@
-#include <algorithm>
-#include <cstdint>
+#include <z3++.h>
+
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
-
-static int findCombination(
-    std::uint32_t indicators, const std::vector<std::uint32_t>& buttons,
-    std::size_t i, std::uint32_t current) {
-  if (indicators == current) return 0;
-  if (i >= buttons.size()) return buttons.size();
-  return std::min(
-      findCombination(indicators, buttons, i + 1, current),
-      1 + findCombination(indicators, buttons, i + 1, current ^ buttons[i]));
-}
 
 int main() {
   int sum{0};
   std::string line{};
   while (std::getline(std::cin, line)) {
-    std::uint32_t indicators{0};
-
     std::size_t i{1};
-    while (line[i] != ']') {
-      if (line[i] == '#') indicators |= 1 << (i - 1);
-      ++i;
-    }
+    while (line[i] != ']') ++i;
 
-    std::vector<uint32_t> buttons{};
+    std::vector<std::vector<int>> buttons{};
 
     i += 2;
     while (line[i] != '{') {
-      std::uint32_t button{0}, num{0};
+      buttons.push_back({});
+      int num{0};
 
       ++i;
       while (line[i] != ')') {
         if (line[i] == ',') {
-          button |= 1 << num;
+          buttons.back().push_back(num);
           num = 0;
         } else {
           num = num * 10 + line[i] - '0';
@@ -43,14 +30,68 @@ int main() {
         ++i;
       }
 
-      buttons.push_back(button | 1 << num);
+      buttons.back().push_back(num);
       i += 2;
     }
 
-    sum += findCombination(indicators, buttons, 0, 0);
+    std::vector<int> joltages{};
+    int num{0};
+
+    ++i;
+    while (line[i] != '}') {
+      if (line[i] == ',') {
+        joltages.push_back(num);
+        num = 0;
+      } else {
+        num = num * 10 + line[i] - '0';
+      }
+      ++i;
+    }
+
+    joltages.push_back(num);
+
+    z3::context ctx{};
+    z3::optimize op(ctx);
+
+    std::vector<z3::expr> exprs{};
+    for (std::size_t i{0}; i < joltages.size(); ++i) {
+      exprs.push_back(ctx.int_val(0));
+    }
+
+    std::vector<z3::expr> vars{};
+    z3::expr varsTotal{ctx.int_val(0)};
+    for (std::size_t i{0}; i < buttons.size(); ++i) {
+      z3::expr var{ctx.int_const(std::string(1, 'a' + i).c_str())};
+      op.add(var >= 0);
+
+      vars.push_back(var);
+      varsTotal = varsTotal + var;
+
+      for (const int num : buttons[i]) {
+        exprs[num] = exprs[num] + var;
+      }
+    }
+
+    for (std::size_t i{0}; i < joltages.size(); ++i) {
+      op.add(exprs[i] == joltages[i]);
+    }
+
+    op.minimize(varsTotal);
+    if (op.check() != z3::sat) {
+      return 1;
+    }
+
+    const z3::model m{op.get_model()};
+
+    int count{0};
+    for (auto& var : vars) {
+      count += m.get_const_interp(var.decl()).get_numeral_int();
+    }
+
+    sum += count;
   }
 
   std::cout << sum << "\n";
 
-  return 1;
+  return 0;
 }
