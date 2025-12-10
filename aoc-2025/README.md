@@ -9,3 +9,4 @@
 - [Day 7: Laboratories](./day-07)
 - [Day 8: Playground](./day-08)
 - [Day 9: Movie Theater](./day-09)
+- [Day 10: Factory](./day-10)
