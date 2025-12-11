@@ -14,3 +14,4 @@ test:
 	@make -C day-08
 	@make -C day-09
 	@make -C day-10
+	@make -C day-11
