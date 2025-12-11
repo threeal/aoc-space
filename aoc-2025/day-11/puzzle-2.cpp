@@ -1,27 +1,31 @@
+#include <array>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-static int explore(
-    std::unordered_map<std::string, int>& cache,
+static long long explore(
+    std::array<std::unordered_map<std::string, long long>, 4>& cache,
     const std::unordered_map<std::string, std::vector<std::string>>& devices,
-    const std::string& device) {
-  auto cacheIt = cache.find(device);
-  if (cacheIt == cache.end()) {
-    int count{0};
+    const std::string& device, char flag) {
+  if (device == "dac") flag |= 1;
+  if (device == "fft") flag |= 2;
+
+  auto cacheIt = cache[flag].find(device);
+  if (cacheIt == cache[flag].end()) {
+    long long count{0};
     const auto it = devices.find(device);
     if (it != devices.end()) {
       for (const std::string& next : it->second) {
-        if (next == "out") {
+        if (next == "out" && flag == 3) {
           ++count;
         } else {
-          count += explore(cache, devices, next);
+          count += explore(cache, devices, next, flag);
         }
       }
     }
 
-    cacheIt = cache.emplace(device, count).first;
+    cacheIt = cache[flag].emplace(device, count).first;
   }
 
   return cacheIt->second;
@@ -49,8 +53,8 @@ int main() {
     devices.emplace(std::move(device), std::move(nexts));
   }
 
-  std::unordered_map<std::string, int> cache{};
-  std::cout << explore(cache, devices, "you") << "\n";
+  std::array<std::unordered_map<std::string, long long>, 4> cache{};
+  std::cout << explore(cache, devices, "svr", 0) << "\n";
 
-  return 1;
+  return 0;
 }
